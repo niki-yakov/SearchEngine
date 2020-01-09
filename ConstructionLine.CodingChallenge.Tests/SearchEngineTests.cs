@@ -8,7 +8,7 @@ namespace ConstructionLine.CodingChallenge.Tests
     public class SearchEngineTests : SearchEngineTestsBase
     {
         [Test]
-        public void Test()
+        public void Search_WhenMatchingShirtsForSingleSizeAndColor_ReturnsAllFound()
         {
             var shirts = new List<Shirt>
             {
@@ -28,6 +28,31 @@ namespace ConstructionLine.CodingChallenge.Tests
             var results = searchEngine.Search(searchOptions);
 
             AssertResults(results.Shirts, searchOptions);
+            AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
+            AssertColorCounts(shirts, searchOptions, results.ColorCounts);
+        }
+
+        [Test]
+        public void Search_WhenNoMatchingShirtsForSingleSizeAndColor_ReturnsEmpty()
+        {
+            var shirts = new List<Shirt>
+            {
+                new Shirt(Guid.NewGuid(), "Red - Small", Size.Small, Color.Red),
+                new Shirt(Guid.NewGuid(), "Black - Medium", Size.Medium, Color.Black),
+                new Shirt(Guid.NewGuid(), "Blue - Large", Size.Large, Color.Blue),
+            };
+
+            var searchEngine = new SearchEngine(shirts);
+            var searchOptions = new SearchOptions
+            {
+                Colors = new List<Color> { Color.Red },
+                Sizes = new List<Size> { Size.Large }
+            };
+
+            var results = searchEngine.Search(searchOptions);
+
+            AssertResults(results.Shirts, searchOptions);
+
             AssertSizeCounts(shirts, searchOptions, results.SizeCounts);
             AssertColorCounts(shirts, searchOptions, results.ColorCounts);
         }
